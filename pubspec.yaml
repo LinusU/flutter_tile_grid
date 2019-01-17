@@ -1,0 +1,12 @@
+name: flutter_tile_grid
+description: A board of tiles organized in a grid.
+version: 0.0.0
+author: Linus Unnebäck <linus@folkdatorn.se>
+homepage: https://github.com/LinusU/flutter_tile_grid
+
+environment:
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
