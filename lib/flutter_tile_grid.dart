@@ -93,7 +93,7 @@ class _TileGridState<TileDataType> extends State<TileGrid<TileDataType>> {
         ),
         child: ClipRect(
           child: CustomMultiChildLayout(
-            delegate: _TileGridLayoutDelegate(rows: rows, columns: columns, tileSize: tileSize, zoom: _zoom, offset: _offset),
+            delegate: _TileGridLayoutDelegate(rows: rows, columns: columns, tileSize: tileSize, zoom: _zoom, offset: _offset, originX: this.widget.originX, originY: this.widget.originY),
             children: children,
           ),
         ),
@@ -111,13 +111,16 @@ class _TileGridLayoutDelegate extends MultiChildLayoutDelegate {
   final double zoom;
   final Offset offset;
 
-  _TileGridLayoutDelegate({ @required this.rows, @required this.columns, @required this.tileSize, @required this.zoom, @required this.offset }): assert(rows != null), assert(columns != null), assert(tileSize != null), assert(zoom != null), assert(offset != null);
+  final int originX;
+  final int originY;
+
+  _TileGridLayoutDelegate({ @required this.rows, @required this.columns, @required this.tileSize, @required this.zoom, @required this.offset, @required this.originX, @required this.originY }): assert(rows != null), assert(columns != null), assert(tileSize != null), assert(zoom != null), assert(offset != null), assert(originX != null), assert(originY != null);
 
   @override
   void performLayout(Size size) {
     final center = size.center(Offset.zero) * zoom + offset;
-    final double top = _snap(center.dy - (rows * tileSize / 2));
-    final double left = _snap(center.dx - (columns * tileSize / 2));
+    final double top = _snap(center.dy - (tileSize * originY));
+    final double left = _snap(center.dx - (tileSize * originX));
 
     if (hasChild('Board')) {
       layoutChild('Board', BoxConstraints.tight(Size(columns * tileSize, rows * tileSize)));
@@ -134,6 +137,6 @@ class _TileGridLayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   bool shouldRelayout(_TileGridLayoutDelegate oldDelegate) {
-    return oldDelegate.rows != rows || oldDelegate.columns != columns || oldDelegate.tileSize != tileSize || oldDelegate.zoom != zoom || oldDelegate.offset != offset;
+    return oldDelegate.rows != rows || oldDelegate.columns != columns || oldDelegate.tileSize != tileSize || oldDelegate.zoom != zoom || oldDelegate.offset != offset || oldDelegate.originX != originX || oldDelegate.originY != originY;
   }
 }
